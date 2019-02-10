@@ -1,0 +1,36 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mercuriete.mrz.reader">
+
+    <uses-feature android:name="android.hardware.screen.landscape"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+    <uses-feature android:name="android.hardware.camera"/>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application>
+
+        <activity android:name=".CaptureActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".HelpActivity"
+            android:screenOrientation="user">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".PreferencesActivity" />
+
+    </application>
+
+</manifest>

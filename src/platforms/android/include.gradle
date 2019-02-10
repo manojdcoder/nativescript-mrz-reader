@@ -1,0 +1,8 @@
+android {
+	
+}
+
+dependencies {
+    implementation 'com.rmtheis:tess-two:6.2.0'
+    implementation 'org.jmrtd:jmrtd:0.5.13'
+}

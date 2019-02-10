@@ -1,0 +1,9 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded" class="page" 
+  xmlns:ui="nativescript-mrz-reader">
+  <ScrollView>
+    <StackLayout class="m-20">
+      <Label class="h3" text="{{ value }}" textWrap="true"></Label>
+      <Button class="btn btn-primary" text="Start" tap="onStartButtonTap"></Button>
+    </StackLayout>
+  </ScrollView>
+</Page>
