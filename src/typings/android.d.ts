@@ -642,6 +642,7 @@ declare module com {
 					public static DEFAULT_TOGGLE_TRANSLATION: boolean;
 					public static DEFAULT_TOGGLE_LIGHT: boolean;
 					public static MRZ_RESULT: string;
+					public static MRZ_PICTURE_PATH: string;
 					public onKeyDown(param0: number, param1: android.view.KeyEvent): boolean;
 					public onShutterButtonFocus(param0: com.mercuriete.mrz.reader.camera.ShutterButton, param1: boolean): void;
 					public onCreate(param0: android.os.Bundle): void;
@@ -1130,6 +1131,7 @@ declare module com {
 						public getFramingRect(): android.graphics.Rect;
 						public requestOcrDecode(param0: android.os.Handler, param1: number): void;
 						public buildLuminanceSource(param0: native.Array<number>, param1: number, param2: number): com.mercuriete.mrz.reader.PlanarYUVLuminanceSource;
+						public takePicture(param0: android.hardware.Camera.PictureCallback): void;
 						public openDriver(param0: android.view.SurfaceHolder): void;
 						public startPreview(): void;
 						public stopPreview(): void;

@@ -19,4 +19,9 @@
         android:layout_height="wrap_content"
         android:text="Preferences" />
 
+    <ImageView
+        android:id="@+id/mrz_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </android.support.v7.widget.LinearLayoutCompat>

@@ -17,8 +17,13 @@
 
 package com.mercuriete.mrz.reader;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
 
 import android.Manifest;
 import android.app.Activity;
@@ -33,8 +38,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.hardware.Camera;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -170,6 +178,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     static final public String MRZ_RESULT = "MRZ_RESULT";
 
+    static final public String MRZ_PICTURE_PATH = "MRZ_PICTURE_PATH";
 
     /**
      * Minimum mean confidence score necessary to not reject single-shot OCR result. Currently unused.
@@ -821,13 +830,122 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             ocrResult.setText(result);
             if (ocrResult.getMeanConfidence() >= 50 && textResultTmpArr.length >= 2 && textResultTmpArr.length <= 3) {
                 try {
-                    MRZInfo mrzInfo = new MRZInfo(result);
+                    final MRZInfo mrzInfo = new MRZInfo(result);
                     if (mrzInfo.toString().equals(result)) {
-                        Toast.makeText(this, mrzInfo.toString(), Toast.LENGTH_LONG).show();
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra(MRZ_RESULT, mrzInfo);
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
+                        // Toast.makeText(this, mrzInfo.toString(), Toast.LENGTH_LONG).show();
+                        final Activity activity = this;
+                        final CameraManager cameraManager = this.getCameraManager();
+                        cameraManager.takePicture(new Camera.PictureCallback() {
+                            @Override
+                            public void onPictureTaken(byte[] data, Camera camera) {
+
+                                String picturePath = null;
+
+                                try {
+
+                                    InputStream inputStream = new ByteArrayInputStream(data);
+                                    Object exif;
+                                    if (android.os.Build.VERSION.SDK_INT >= 24) {
+                                        exif = new ExifInterface(inputStream);
+                                    } else {
+                                        exif = new android.support.media.ExifInterface(inputStream);
+                                    }
+
+                                    int orientation = ((ExifInterface) exif).getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION,
+                                            android.media.ExifInterface.ORIENTATION_UNDEFINED);
+                                    inputStream.close();
+
+                                    // Sets up the matrix for rotation, if need be.
+                                    Matrix bitmapMatrix = new Matrix();
+                                    switch (orientation) {
+                                        case 1:
+                                            break; // top left
+                                        case 2:
+                                            bitmapMatrix.postScale(-1, 1);
+                                            break; // top right
+                                        case 3:
+                                            bitmapMatrix.postRotate(180);
+                                            break; // bottom right
+                                        case 4:
+                                            bitmapMatrix.postRotate(180);
+                                            bitmapMatrix.postScale(-1, 1);
+                                            break; // bottom left
+                                        case 5:
+                                            bitmapMatrix.postRotate(90);
+                                            bitmapMatrix.postScale(-1, 1);
+                                            break; // left top
+                                        case 6:
+                                            bitmapMatrix.postRotate(90);
+                                            break; // right top
+                                        case 7:
+                                            bitmapMatrix.postRotate(270);
+                                            bitmapMatrix.postScale(-1, 1);
+                                            break; // right bottom
+                                        case 8:
+                                            bitmapMatrix.postRotate(270);
+                                            break;
+                                    }
+
+                                    if (orientation > 1) {
+                                        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                                        bitmapOptions.inJustDecodeBounds = true;
+                                        Bitmap originalBmp = android.graphics.BitmapFactory.decodeByteArray(data, 0, data.length, bitmapOptions);
+
+                                        // Raw height and width of image
+                                        int height = bitmapOptions.outHeight;
+                                        int width = bitmapOptions.outWidth;
+                                        int inSampleSize = 1;
+                                        int reqWidth = 1000;
+                                        int reqHeight = 1000;
+
+                                        if (height > reqHeight || width > reqWidth) {
+
+                                            int halfHeight = height / 2;
+                                            int halfWidth = width / 2;
+
+                                            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                                            // height and width larger than the requested height and width.
+                                            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                                                inSampleSize *= 2;
+                                            }
+                                        }
+
+                                        bitmapOptions.inSampleSize = inSampleSize;
+                                        bitmapOptions.inJustDecodeBounds = false;
+
+                                        originalBmp = BitmapFactory.decodeByteArray(data, 0, data.length, bitmapOptions);
+                                        width = originalBmp.getWidth();
+                                        height = originalBmp.getHeight();
+
+                                        Bitmap finalBmp = Bitmap.createBitmap(originalBmp, 0, 0, width, height, bitmapMatrix, false);
+                                        originalBmp.recycle();
+
+                                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                                        finalBmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+                                        finalBmp.recycle();
+                                        data = outputStream.toByteArray();
+                                        outputStream.close();
+                                    }
+
+                                    File file = new File(activity.getCacheDir() + "/IMG_" + new Date().getTime() + ".jpg");
+                                    FileOutputStream fos = new FileOutputStream(file);
+                                    fos.write(data);
+                                    fos.close();
+
+                                    picturePath = file.getAbsolutePath();
+
+                                } catch (Exception e) {
+                                    Log.e(CaptureActivity.TAG, e.getMessage());
+                                }
+
+                                Intent returnIntent = new Intent();
+                                returnIntent.putExtra(MRZ_RESULT, mrzInfo);
+                                returnIntent.putExtra(MRZ_PICTURE_PATH, picturePath);
+                                activity.setResult(Activity.RESULT_OK, returnIntent);
+                                activity.finish();
+                            }
+                        });
                     }
                 } catch (IllegalStateException | IllegalArgumentException e) {
                     Log.w("CACA", "checksum fail", e);

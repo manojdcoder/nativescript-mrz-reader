@@ -15,17 +15,18 @@ export function pageLoaded(args: observable.EventData) {
     page.bindingContext = new HelloWorldModel();
 }
 
-export function onStartButtonTap(args: observable.EventData) {
+export function onScanButtonTap(args: observable.EventData) {
     if (Permissions.hasPermission(android.Manifest.permission.CAMERA)) {
         retrieveData((result: IMrzData) => {
             // Give it some time for capture activity to finish
             setTimeout(() => {
-                (<Page>(<Button>args.object).page).bindingContext
-                    .set("value", result && result.value || "Cancelled");
+                const bindingContext = (<Page>(<Button>args.object).page).bindingContext;
+                bindingContext.set("value", result && result.value || "Cancelled");
+                bindingContext.set("image", result && result.image || null);
             }, 100);
         });
     } else {
         Permissions.requestPermission(android.Manifest.permission.CAMERA)
-            .then(() => onStartButtonTap(args));
+            .then(() => onScanButtonTap(args));
     }
 }

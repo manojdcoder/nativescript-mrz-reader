@@ -10,10 +10,12 @@ function init() {
             let result: IMrzData = null;
             if (data.resultCode === android.app.Activity.RESULT_OK) {
                 const intent = <android.content.Intent>data.intent,
-                    mrzInfo: org.jmrtd.lds.icao.MRZInfo = <any>intent.getSerializableExtra(com.mercuriete.mrz.reader.CaptureActivity.MRZ_RESULT);
+                    mrzInfo: org.jmrtd.lds.icao.MRZInfo = <any>intent.getSerializableExtra(com.mercuriete.mrz.reader.CaptureActivity.MRZ_RESULT),
+                    mrzPicturePath = intent.getExtras().getString(com.mercuriete.mrz.reader.CaptureActivity.MRZ_PICTURE_PATH);
 
                 result = {
                     value: mrzInfo.toString(),
+                    image: mrzPicturePath,
                     android: mrzInfo
                 };
             }

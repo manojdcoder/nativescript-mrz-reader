@@ -40,10 +40,10 @@ import java.io.IOException;
 public final class CameraManager {
 
   private static final String TAG = CameraManager.class.getSimpleName();
-  
+
   private static final int MIN_FRAME_WIDTH = 50; // originally 240
   private static final int MIN_FRAME_HEIGHT = 20; // originally 240
-  
+
   private final Context context;
   private final CameraConfigurationManager configManager;
   private Camera camera;
@@ -93,7 +93,7 @@ public final class CameraManager {
       }
     }
     configManager.setDesiredCameraParameters(theCamera);
-    
+
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
     reverseImage = prefs.getBoolean(PreferencesActivity.KEY_REVERSE_IMAGE, false);
   }
@@ -130,10 +130,10 @@ public final class CameraManager {
    */
   public synchronized void stopPreview() {
     if (autoFocusManager != null) {
-    	autoFocusManager.stop();
-    	autoFocusManager = null;
+      autoFocusManager.stop();
+      autoFocusManager = null;
     }
-  	if (camera != null && previewing) {
+    if (camera != null && previewing) {
       camera.stopPreview();
       previewCallback.setHandler(null, 0);
       previewing = false;
@@ -155,15 +155,15 @@ public final class CameraManager {
       theCamera.setOneShotPreviewCallback(previewCallback);
     }
   }
-  
+
   /**
    * Asks the camera hardware to perform an autofocus.
    * @param delay Time delay to send with the request
    */
   public synchronized void requestAutoFocus(long delay) {
-  	autoFocusManager.start(delay);
+    autoFocusManager.start(delay);
   }
-  
+
   /**
    * Calculates the framing rect which the UI should draw to show the user where to place the
    * barcode. This target helps with alignment as well as forces the user to hold the device
@@ -220,7 +220,7 @@ public final class CameraManager {
 
   /**
    * Changes the size of the framing rect.
-   * 
+   *
    * @param deltaWidth Number of pixels to adjust the width
    * @param deltaHeight Number of pixels to adjust the height
    */
@@ -264,7 +264,10 @@ public final class CameraManager {
     }
     // Go ahead and assume it's YUV rather than die.
     return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
-                                        rect.width(), rect.height(), reverseImage);
+            rect.width(), rect.height(), reverseImage);
   }
 
+  public void takePicture(Camera.PictureCallback pictureCallback) {
+    camera.takePicture(null, null, pictureCallback);
+  }
 }
