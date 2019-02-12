@@ -24,8 +24,8 @@
                android:layout_height="fill_parent"
                android:layout_centerInParent="true"/>
      
-  <com.mercuriete.mrz.reader.ViewfinderView
-      android:id="@+id/viewfinder_view"
+  <com.mercuriete.mrz.reader.MrzViewfinderView
+      android:id="@+id/mrz_viewfinder_view"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:background="#0000"/>

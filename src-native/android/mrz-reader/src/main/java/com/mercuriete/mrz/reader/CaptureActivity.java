@@ -199,7 +199,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
-    private ViewfinderView viewfinderView;
+    private MrzViewfinderView viewfinderView;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private TextView statusViewBottom;
@@ -260,8 +260,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.capture);
-        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+        setContentView(R.layout.mrz_capture);
+        viewfinderView = (MrzViewfinderView) findViewById(R.id.mrz_viewfinder_view);
         cameraButtonView = findViewById(R.id.camera_button_view);
         resultView = findViewById(R.id.result_view);
 
@@ -954,7 +954,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
 
 
-        // Send an OcrResultText object to the ViewfinderView for text rendering
+        // Send an OcrResultText object to the MrzViewfinderView for text rendering
         viewfinderView.addResultText(new OcrResultText(ocrResult.getText(),
                 ocrResult.getWordConfidences(),
                 ocrResult.getMeanConfidence(),

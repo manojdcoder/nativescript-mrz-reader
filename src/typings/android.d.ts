@@ -1074,8 +1074,8 @@ declare module com {
 	export module mercuriete {
 		export module mrz {
 			export module reader {
-				export class ViewfinderView {
-					public static class: java.lang.Class<com.mercuriete.mrz.reader.ViewfinderView>;
+				export class MrzViewfinderView {
+					public static class: java.lang.Class<com.mercuriete.mrz.reader.MrzViewfinderView>;
 					public constructor(param0: android.content.Context, param1: android.util.AttributeSet);
 					public removeResultText(): void;
 					public onDraw(param0: android.graphics.Canvas): void;

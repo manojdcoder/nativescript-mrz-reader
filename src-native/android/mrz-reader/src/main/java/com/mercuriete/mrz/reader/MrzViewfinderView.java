@@ -38,7 +38,7 @@ import android.view.View;
  *
  * The code for this class was adapted from the ZXing project: http://code.google.com/p/zxing
  */
-public final class ViewfinderView extends View {
+public final class MrzViewfinderView extends View {
   //private static final long ANIMATION_DELAY = 80L;
 
   /** Flag to draw boxes representing the results from TessBaseAPI::GetRegions(). */
@@ -82,7 +82,7 @@ public final class ViewfinderView extends View {
   private Rect rect;
 
   // This constructor is used when the class is built from an XML resource.
-  public ViewfinderView(Context context, AttributeSet attrs) {
+  public MrzViewfinderView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
     // Initialize these once for performance rather than calling them every time in onDraw().
@@ -180,10 +180,10 @@ public final class ViewfinderView extends View {
           // Split the text into words
           wordBoundingBoxes = resultText.getWordBoundingBoxes();
           //      for (String w : words) {
-          //        Log.e("ViewfinderView", "word: " + w);
+          //        Log.e("MrzViewfinderView", "word: " + w);
           //      }
-          //Log.d("ViewfinderView", "There are " + words.length + " words in the string array.");
-          //Log.d("ViewfinderView", "There are " + wordBoundingBoxes.size() + " words with bounding boxes.");
+          //Log.d("MrzViewfinderView", "There are " + words.length + " words in the string array.");
+          //Log.d("MrzViewfinderView", "There are " + wordBoundingBoxes.size() + " words with bounding boxes.");
         }
 
         if (DRAW_WORD_BOXES) {

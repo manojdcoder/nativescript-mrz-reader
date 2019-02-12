@@ -151,17 +151,17 @@ final class DecodeHandler extends Handler {
       ocrResult = new OcrResult();
       ocrResult.setWordConfidences(baseApi.wordConfidences());
       ocrResult.setMeanConfidence( baseApi.meanConfidence());
-      if (ViewfinderView.DRAW_REGION_BOXES) {
+      if (MrzViewfinderView.DRAW_REGION_BOXES) {
         Pixa regions = baseApi.getRegions();
         ocrResult.setRegionBoundingBoxes(regions.getBoxRects());
         regions.recycle();
       }
-      if (ViewfinderView.DRAW_TEXTLINE_BOXES) {
+      if (MrzViewfinderView.DRAW_TEXTLINE_BOXES) {
         Pixa textlines = baseApi.getTextlines();
         ocrResult.setTextlineBoundingBoxes(textlines.getBoxRects());
         textlines.recycle();
       }
-      if (ViewfinderView.DRAW_STRIP_BOXES) {
+      if (MrzViewfinderView.DRAW_STRIP_BOXES) {
         Pixa strips = baseApi.getStrips();
         ocrResult.setStripBoundingBoxes(strips.getBoxRects());
         strips.recycle();
@@ -174,7 +174,7 @@ final class DecodeHandler extends Handler {
       ocrResult.setWordBoundingBoxes(words.getBoxRects());
       words.recycle();
       
-//      if (ViewfinderView.DRAW_CHARACTER_BOXES || ViewfinderView.DRAW_CHARACTER_TEXT) {
+//      if (MrzViewfinderView.DRAW_CHARACTER_BOXES || MrzViewfinderView.DRAW_CHARACTER_TEXT) {
 //        ocrResult.setCharacterBoundingBoxes(baseApi.getCharacters().getBoxRects());
 //      }
     } catch (RuntimeException e) {
