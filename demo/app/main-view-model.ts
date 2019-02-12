@@ -4,5 +4,6 @@ export class HelloWorldModel extends Observable {
   constructor() {
     super();
     this.set("value", "");
+    this.set("image", "");
   }
 }

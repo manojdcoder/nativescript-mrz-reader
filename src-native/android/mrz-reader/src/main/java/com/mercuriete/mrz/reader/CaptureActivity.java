@@ -156,12 +156,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     /**
      * Flag to display the real-time recognition results at the top of the scanning screen.
      */
-    private static final boolean CONTINUOUS_DISPLAY_RECOGNIZED_TEXT = true;
+    private static final boolean CONTINUOUS_DISPLAY_RECOGNIZED_TEXT = false;
 
     /**
      * Flag to display recognition-related statistics on the scanning screen.
      */
-    private static final boolean CONTINUOUS_DISPLAY_METADATA = true;
+    private static final boolean CONTINUOUS_DISPLAY_METADATA = false;
 
     /**
      * Flag to enable display of the on-screen shutter button.
@@ -1117,9 +1117,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
      * Displays a pop-up message showing the name of the current OCR source language.
      */
     void showLanguageName() {
-        Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable, Toast.LENGTH_LONG);
+        /*Toast toast = Toast.makeText(this, "OCR: " + sourceLanguageReadable, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 0, 0);
-        toast.show();
+        toast.show();*/
     }
 
     /**
